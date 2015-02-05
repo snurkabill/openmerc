@@ -11,8 +11,6 @@
 #include <map>
 #include "module_base.hpp"
 
-// parsing commands
-#include <wordexp.h>
 
 // dev
 #include <unistd.h>
@@ -92,8 +90,7 @@ typedef struct module_struct {
 
 } modul_struct;
 
-
-// fucking unclear shit stuff :(
+// unclear.
 typedef struct group_struct {
 
   std::string           name;
@@ -106,7 +103,8 @@ typedef std::map<int, module_struct> MODUL_CONT;  // module_id -> module_struct
 class module_wrapper {
 
 private:
-  int                           m_id;       // posledni pouzite id modulu
+  int                           m_id;        // posledni pouzite id modulu
+  int                           m_thread_id; // posledni pouzite id vlakna
   MODUL_CONT                    m_modules;
   std::map<int, std::thread>    m_threads;
   std::map<int, group_struct>   m_groups;
@@ -123,7 +121,7 @@ public:
 
   void init(module_struct & module, std::string path_to_config);
 
-  void run(module_struct & module, int type);
+  void run(module_struct & module, int type = 0);
 
   void remove(module_struct & module);
 
@@ -134,6 +132,7 @@ public:
   MODUL_CONT::iterator find(int module_id);
 
   int get_unique_id();
+  int get_thread_id();
 
   void print_info();
   void get_info();

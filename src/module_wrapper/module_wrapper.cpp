@@ -2,15 +2,12 @@
 
 module_wrapper::module_wrapper() {
 
-  m_id = 0;
+  m_id        = 0;
+  m_thread_id = 0;
 
 }
 
-module_wrapper::~module_wrapper() {
-
-}
-
-
+module_wrapper::~module_wrapper() {}
 
 
 MODUL_CONT::iterator module_wrapper::find(int module_id) {
@@ -21,7 +18,6 @@ MODUL_CONT::iterator module_wrapper::find(int module_id) {
 
   return m_modules.end();
 }
-
 
 /**
  * Metoda vytiskne info o aktualnich modulech
@@ -42,7 +38,6 @@ void module_wrapper::print_info() {
   }
 
 
-
   /* Threads */
 
   /* Groups */
@@ -55,6 +50,14 @@ int module_wrapper::get_unique_id() {
   m_id++;
   return m_id;
 }
+
+
+// update in .hpp file
+int module_wrapper::get_thread_id() {
+  m_thread_id++;
+  return m_thread_id++;
+}
+
 
 // @TODO: pridat i nepovinne parametry a nastavit jejich default!
 //        check group_id if exists
@@ -135,9 +138,20 @@ void module_wrapper::stop(module_struct & module) {
 void module_wrapper::run(module_struct & module, int type) {
 
   std::cout << "run_type=" << type << std::endl;
+  module.active = true;
+  module.thread_index = get_thread_id();
 
-  module.thread_index = -1;
-  // module.thread_index = m_threads.size()-1;
+  m_threads.insert(
+    std::pair<int, std::thread>(
+      module.thread_index,
+      std::thread(
+        &module_wrapper::create_thread,
+        this,
+        &module
+      )
+    )
+  );
+
 }
 
 void module_wrapper::remove(module_struct & module) {
@@ -145,10 +159,10 @@ void module_wrapper::remove(module_struct & module) {
   std::cout << "removing module" << std::endl;
   module.active = false;
 
-  // if (m_threads[module.thread_index].joinable())
-  // {
-  //   m_threads[module.thread_index].join();
-  // }
+  if (m_threads[module.thread_index].joinable())
+  {
+    m_threads[module.thread_index].join();
+  }
 
 
   module.destroy(module.module);
@@ -159,26 +173,47 @@ void module_wrapper::remove(module_struct & module) {
 }
 
 
-int main() {
+void module_wrapper::create_thread(module_struct * module) {
 
-  module_wrapper mw;
+  module->active = true;
 
-  int module = mw.add("/home/zahrada/Dropbox/openmerc/IPC/0.0.1/src/module_wrapper/module.so", "fooo", 0, 1);
+  while(module->active)
+  {
+    module->module->update();
+    //std::cout << module->id << std::endl;
+    //usleep(10);
+  }
 
-  auto itr = mw.find(module);
-
-  mw.print_info();
-
-
-  mw.init(itr->second, "config");
-  itr = mw.find(module);
-  mw.run(itr->second, 42);
-  itr = mw.find(module);
-  mw.stop(itr->second);
-  itr = mw.find(module);
-mw.print_info();
-  mw.remove(itr->second);
-
-  mw.print_info();
-  return 0;
+  std::cout << "module id=" << module->id << " finished!" << std::endl;
 }
+
+
+// int main() {
+//
+//   module_wrapper mw;
+//
+//   std::string path = "/home/zahrada/Dropbox/openmerc/MASTER/mercore/src/module_wrapper/module.so";
+//
+//   int module = mw.add(path, "fooo", 0, 1);
+//
+//   auto itr = mw.find(module);
+//
+//   mw.print_info();
+//
+//   mw.init(itr->second, "config");
+//
+//   itr = mw.find(module);
+//   mw.run(itr->second, 42);
+//   itr = mw.find(module);
+//   mw.print_info();
+//   mw.stop(itr->second);
+//   mw.print_info();
+//
+//   itr = mw.find(module);
+//   mw.remove(itr->second);
+//
+//   mw.print_info();
+//
+//
+//   return 0;
+// }

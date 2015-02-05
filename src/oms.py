@@ -8,10 +8,10 @@ Usage:
     mercore core status
     mercore module add [-c <config_path> -P <permission> -n <module_name> --home] <module_path>
     mercore module set [-c <config_path> -P <permission>]  (--mid <mid> | -n <module_name>)
-    mercore module run <mid>...
-    mercore module stop <mid>...
-    mercore module remove <mid>...
-    mercore module info [<mid>...]
+    mercore module run <mid>
+    mercore module stop <mid>
+    mercore module remove <mid>
+    mercore module info <mid>
     mercore module find ([--mid <mid> | -c <config_path> | -n <module_name> | -p <module_path> | -P <permission>])
 
 
@@ -29,7 +29,7 @@ Options:
 import zmq
 from docopt import docopt
 import json
-
+import os
 
 #########################################
 ##          Global variables           ##
@@ -113,6 +113,7 @@ while command != "exit" :
         break
     elif command == "mercore run":
         print("initializing program mercore")
+        # run mercore with nohup
         continue
     else :
         command = process_variables(command)

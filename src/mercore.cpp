@@ -6,29 +6,54 @@
 #include <sstream>
 
 #include "mongo/client/dbclient.h"
+#include "module_wrapper/module_wrapper.hpp"
 
 using namespace mongo;
 
 
-std::string process_command(BSONObj b) {
+std::string process_command(BSONObj b, module_wrapper & mw) {
 
   if (b["module"].str() == "True") {
 
     if (b["add"].str() == "True") {
 
-      return "{'command':\"adding module\"}";
+      // seber vsechny informace...
+      std::string module_path = b["<module_path>"].str();
+      int permission = std::atoi(b["-P"].str().c_str());
+      std::string name = b["-n"].str();
+      int group_id = 0;
+      int module_id = mw.add(module_path, name, permission, group_id);
+
+      // create return message
+      std::stringstream ss;
+      ss << "{'return':\"" << module_id << "\"}";
+      return ss.str();
 
     } else if (b["set"].str() == "True") {
 
-      return "{'command':\"setting module\"}";
+      return "{'return':\"setting module is not defined yet\"}";
 
     } else if (b["remove"].str() == "True") {
 
-      return "{'command':\"removing module\"}";
+
+      return "{'return':\"removing module\"}";
+
+    } else if (b["stop"].str() == "True") {
+
+      int module_id = std::atoi(b["<mid>"].str().c_str());
+      //mw.stop(mw.find(module_id));
+
+      return "{'return':\"Module has been stopped.\"}";
 
     } else if (b["run"].str() == "True") {
 
-      return "{'command':\"running module\"}";
+
+
+    } else if (b["info"].str() == "True") {
+
+    } else if (b["find"].str() == "True") {
+
+
     }
 
   } else if (b["core"].str() == "True") {
@@ -65,10 +90,14 @@ std::string process_command(BSONObj b) {
  */
 int main(int argc, char ** argv) {
 
+  module_wrapper mw;
+
+
   // Prepare our context and socket
   zmq::context_t context(1);
   zmq::socket_t socket(context, ZMQ_REP);
   socket.bind("tcp://*:5555");
+
 
   while (true) {
 
@@ -85,9 +114,9 @@ int main(int argc, char ** argv) {
 
     BSONObj bson = fromjson(command.c_str());
 
-    std::cout << bson.toString() << std::endl;
+    //std::cout << bson.toString() << std::endl;
 
-    std::string reply_message = process_command(bson);
+    std::string reply_message = process_command(bson, mw);
     std::cout << "reply_message=" << reply_message << std::endl;
 
     zmq::message_t reply(reply_message.length());

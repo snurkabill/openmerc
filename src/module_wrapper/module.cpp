@@ -10,7 +10,7 @@ public:
   }
 
   virtual int update() {
-    //std::cout << "hello world! I am update function." << std::endl;
+    std::cout << "hello world! I am update function." << std::endl;
     return 0;
   }
 
