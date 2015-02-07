@@ -87,7 +87,6 @@ typedef struct module_struct {
     return ss.str();
   }
 
-
 } modul_struct;
 
 // unclear.

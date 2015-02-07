@@ -35,12 +35,13 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
 
     } else if (b["remove"].str() == "True") {
 
-
       return "{'return':\"removing module\"}";
 
     } else if (b["stop"].str() == "True") {
 
       int module_id = std::atoi(b["<mid>"].str().c_str());
+      MODUL_CONT::iterator module = mw.find(module_id);
+      //mw.stop(*module);
       //mw.stop(mw.find(module_id));
 
       return "{'return':\"Module has been stopped.\"}";
@@ -48,8 +49,10 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
     } else if (b["run"].str() == "True") {
 
 
+    } else if (b["status"].str() == "True") {
 
-    } else if (b["info"].str() == "True") {
+      mw.print_info();
+
 
     } else if (b["find"].str() == "True") {
 

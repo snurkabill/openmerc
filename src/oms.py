@@ -6,30 +6,31 @@ Usage:
     mercore core exit
     mercore core run
     mercore core status
-    mercore module add [-c <config_path> -P <permission> -n <module_name> --home] <module_path>
-    mercore module set [-c <config_path> -P <permission>]  (--mid <mid> | -n <module_name>)
+    mercore module add [-c <config_path> -P <permission> -n <module_name> -g <group_id>] <module_path>
+    mercore module set [-c <config_path> -P <permission> -g <group_id>]  (--mid <mid> | -n <module_name>)
     mercore module run <mid>
     mercore module stop <mid>
     mercore module remove <mid>
-    mercore module info <mid>
+    mercore module status <mid>
     mercore module find ([--mid <mid> | -c <config_path> | -n <module_name> | -p <module_path> | -P <permission>])
-
-
-
+    mercore group add
+    mercore group set
+    mercore group remove
+    mercore group status
 
 Options:
     -c <config_path>                Configuration file.
-    -n <module_name>
-    --home                          Path to default moduls location
-    --mid <mid>                     Module ID
-    -P <permission>                 Permission for every
-    -p <module_path>
+    -n <module_name>                Name of the module.
+    --mid <mid>                     Module ID.
+    -P <permission>                 Permission for every.
+    -p <module_path>                path_to_module.
+    -g <group_id>                   Group ID.
 """
 
 import zmq
 from docopt import docopt
 import json
-import os
+import os   # run mercore with nohup
 
 #########################################
 ##          Global variables           ##

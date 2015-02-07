@@ -1,4 +1,7 @@
 language: cpp
 compiler: clang
+before_install:
+  - git submodule update --init --recursive
+
 # Change this to your needs
 script: cmake . && make
