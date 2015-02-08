@@ -19,40 +19,74 @@ MODUL_CONT::iterator module_wrapper::find(int module_id) {
   return m_modules.end();
 }
 
+
+std::string module_wrapper::get_info() {
+  /* Modules */
+
+  std::stringstream ss;
+
+  ss <<
+  "____________________________________________________________________________________" << '\n' <<
+  "MODULES:" << '\n' <<
+  "number_of_modules=" << m_modules.size() << '\n' <<
+  "____________________________________________________________________________________" << '\n';
+
+  for (auto itr = m_modules.begin(); itr != m_modules.end(); ++itr) {
+    ss << itr->second.str() << '\n';
+  }
+
+  ss << "____________________________________________________________________________________\n";
+  /* Threads */
+
+  ss << "THREADS: " << '\n' <<
+  "number_of_threads=" << m_threads.size() << '\n' <<
+  "active thread_id: ";
+  for (auto itr = m_threads.begin(); itr != m_threads.end(); ++itr) {
+    ss << itr->first << ", ";
+  }
+  ss << '\n';
+
+  ss << "____________________________________________________________________________________\n";
+
+
+  /* Groups */
+
+  ss << "GROUPS: " << '\n' <<
+  "number_of_groups=" << m_threads.size() << '\n';
+  for (auto itr = m_groups.begin(); itr != m_groups.end(); ++itr) {
+    ss << itr->first << ": " << itr->second.str() << '\n';
+  }
+
+  ss << "____________________________________________________________________________________\n\n\n";
+
+  return ss.str();
+
+}
+
 /**
  * Metoda vytiskne info o aktualnich modulech
  * @type {}
  */
 void module_wrapper::print_info() {
 
-  /* Modules */
-
-  std::cout <<
-  "MODULES:" << std::endl <<
-  "number_of_modules=" << m_modules.size() << std::endl <<
-  "____________________________________________________________________________________" <<
-  std::endl;
-
-  for (auto itr = m_modules.begin(); itr != m_modules.end(); ++itr) {
-    std::cout << itr->second.str() << std::endl;
-  }
-
-
-  /* Threads */
-
-  /* Groups */
-
-  std::cout << std::endl << std::endl;
-
+  std::cout << get_info() << std::endl;
 }
 
+/**
+ * metoda vrati unikatni id pro modul
+ * @type {[type]}
+ * @TODO: vyuzivat jiz zahozena id
+ */
 int module_wrapper::get_unique_id() {
   m_id++;
   return m_id;
 }
 
-
-// update in .hpp file
+/**
+ * metoda vratu unikatni id pro vlakno
+ * @type {[type]}
+ * @TODO: vyuzivat jiz zahozena id
+ */
 int module_wrapper::get_thread_id() {
   m_thread_id++;
   return m_thread_id++;
@@ -135,6 +169,11 @@ void module_wrapper::stop(module_struct & module) {
 
 }
 
+/**
+ * metoda pusti v novem vlakne update
+ * @type {[type]}
+ * @TODO:
+ */
 void module_wrapper::run(module_struct & module, int type) {
 
   std::cout << "run_type=" << type << std::endl;
@@ -180,40 +219,7 @@ void module_wrapper::create_thread(module_struct * module) {
   while(module->active)
   {
     module->module->update();
-    //std::cout << module->id << std::endl;
-    //usleep(10);
   }
 
   std::cout << "module id=" << module->id << " finished!" << std::endl;
 }
-
-
-// int main() {
-//
-//   module_wrapper mw;
-//
-//   std::string path = "/home/zahrada/Dropbox/openmerc/MASTER/mercore/src/module_wrapper/module.so";
-//
-//   int module = mw.add(path, "fooo", 0, 1);
-//
-//   auto itr = mw.find(module);
-//
-//   mw.print_info();
-//
-//   mw.init(itr->second, "config");
-//
-//   itr = mw.find(module);
-//   mw.run(itr->second, 42);
-//   itr = mw.find(module);
-//   mw.print_info();
-//   mw.stop(itr->second);
-//   mw.print_info();
-//
-//   itr = mw.find(module);
-//   mw.remove(itr->second);
-//
-//   mw.print_info();
-//
-//
-//   return 0;
-// }

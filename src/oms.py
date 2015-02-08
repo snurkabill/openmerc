@@ -11,7 +11,7 @@ Usage:
     mercore module run <mid>
     mercore module stop <mid>
     mercore module remove <mid>
-    mercore module status <mid>
+    mercore module status [<mid>]
     mercore module find ([--mid <mid> | -c <config_path> | -n <module_name> | -p <module_path> | -P <permission>])
     mercore group add
     mercore group set
@@ -40,7 +40,6 @@ command = ""
 variables = {}
 variable_to_set = ""
 
-
 #########################################
 ##              Functions              ##
 #########################################
@@ -52,6 +51,7 @@ def send_socket(zprava, ip, port):
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://%s:%s" %(ip, port))
     socket.send(zprava)
+    # u urrcitych prikazu nema cekat na odpoved...
     message = socket.recv() # casovy omezeni??
     return message
 

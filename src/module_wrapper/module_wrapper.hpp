@@ -95,6 +95,18 @@ typedef struct group_struct {
   std::string           name;
   std::vector<int>      subscribers; // id modulu, kam se preposilaji prikazy.
 
+
+  std::string str() const{
+    std::stringstream ss;
+    ss << "{'name':\"" << name << "\", 'sibscribers': [";
+    for (auto itr = subscribers.begin(); itr != subscribers.end(); ++itr) {
+      ss << "'" << *itr << "'";
+      if(itr != subscribers.end()-1) ss << ", ";
+    }
+    ss << "]}";
+    return ss.str();
+  }
+
 } group_struct;
 
 typedef std::map<int, module_struct> MODUL_CONT;  // module_id -> module_struct
@@ -134,7 +146,7 @@ public:
   int get_thread_id();
 
   void print_info();
-  void get_info();
+  std::string get_info();
 
 };
 

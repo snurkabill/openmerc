@@ -35,28 +35,33 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
 
     } else if (b["remove"].str() == "True") {
 
-      return "{'return':\"removing module\"}";
+      int module_id = std::atoi(b["<mid>"].str().c_str());
+      MODUL_CONT::iterator module = mw.find(module_id);
+      mw.remove(module->second);
+      return "OK";
 
     } else if (b["stop"].str() == "True") {
 
       int module_id = std::atoi(b["<mid>"].str().c_str());
       MODUL_CONT::iterator module = mw.find(module_id);
-      //mw.stop(*module);
-      //mw.stop(mw.find(module_id));
+      mw.stop(module->second);
 
-      return "{'return':\"Module has been stopped.\"}";
+      return "OK";
 
     } else if (b["run"].str() == "True") {
+
+      int module_id = std::atoi(b["<mid>"].str().c_str());
+      MODUL_CONT::iterator module = mw.find(module_id);
+      mw.run(module->second);
 
 
     } else if (b["status"].str() == "True") {
 
-      mw.print_info();
-
+      return mw.get_info();
 
     } else if (b["find"].str() == "True") {
 
-
+      return "{'return': \"The method find is not implemented yet.\"}";
     }
 
   } else if (b["core"].str() == "True") {
@@ -67,6 +72,7 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
 
     } else if (b["exit"].str() == "True") {
 
+      exit(EXIT_SUCCESS);
       return "{'command':\"Mercore quit. Thank you for using it.\"}";
 
     } else if (b["run"].str() == "True") {
@@ -75,16 +81,14 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
 
     } else if (b["status"].str() == "True") {
 
-      return "{'command':\"Mercore update fb status!\"}";
+      return "{'command':\"Mercore update status!\"}";
     }
 
   }
 
-
   // pokud se dostal az se, pak command neni validni nebo je chyba v kodu...
 
   return "{'command':\"Unknown command.\"}";
-
 }
 
 /**
@@ -95,12 +99,10 @@ int main(int argc, char ** argv) {
 
   module_wrapper mw;
 
-
   // Prepare our context and socket
   zmq::context_t context(1);
   zmq::socket_t socket(context, ZMQ_REP);
   socket.bind("tcp://*:5555");
-
 
   while (true) {
 
