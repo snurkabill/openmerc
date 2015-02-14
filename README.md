@@ -14,12 +14,15 @@ At the moment, we are not experiencing any bugs and issues. Help us to dig them 
 ## Installation
 
 Regular course of installation begins with
-`git clone https://github.com/mrzahrada/mercore`
+
+`git clone https://github.com/mrzahrada/mercore.git`
 
 Then use CMakeLists.txt as following 
+
 `cmake .`
 
 Finish compiling with
+
 `make`
 
 
@@ -60,18 +63,21 @@ We are going to add examples of mercore utilisation later.
 
 ## Documentation
 
+General documentation will be published later. 
 
 ## License
 
 Mercore runs under the MIT License with respect to licences of included code. For more information on MIT License, see [opensource.org](http://opensource.org/licenses/MIT) or [LICENSE](https://github.com/mrzahrada/mercore/blob/master/LICENSE) file.
 Namely, following parts differ from the source code license:
 
-* Boost Libraries - Boost Software License; Version 1.0, August 17th, 2003
-* ØMQ driver - MIT License 
-* docopt - MIT License
-* MongoDB C++ Driver - Apache License, version 2.0
+* Boost Libraries - Boost Software License; Version 1.0, August 17th, 2003; [more here](http://www.boost.org/)
+* ØMQ driver - MIT License; [more here](http://github.com/zeromq/cppzmq)
+* docopt - MIT License; [more here](http://github.com/docopt/docopt)
+* MongoDB C++ Driver - Apache License, version 2.0; [more here](http://github.com/mongodb/mongo-cxx-driver)
 
 ## Manifesto
+
+Manifesto brings together our creed and opinions of the whole project direction. See [MANIFESTO](https://github.com/mrzahrada/mercore/blob/master/MANIFESTO.md)
 
 ## Contributing
 
