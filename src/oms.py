@@ -1,22 +1,22 @@
-#!/usr/bin/python
-
 """
+Mercore 0.1.0
+
 Usage:
-    mercore core stop
-    mercore core exit
-    mercore core run
-    mercore core status
-    mercore module add [-c <config_path> -P <permission> -n <module_name> -g <group_id>] <module_path>
-    mercore module set [-c <config_path> -P <permission> -g <group_id>]  (--mid <mid> | -n <module_name>)
-    mercore module run <mid>
-    mercore module stop <mid>
-    mercore module remove <mid>
-    mercore module status [<mid>]
-    mercore module find ([--mid <mid> | -c <config_path> | -n <module_name> | -p <module_path> | -P <permission>])
-    mercore group add
-    mercore group set
-    mercore group remove
-    mercore group status
+    merc core stop
+    merc core exit
+    merc core run
+    merc core status
+    merc module add [-c <config_path> -P <permission> -n <module_name> -g <group_id>] <module_path>
+    merc module set [-c <config_path> -P <permission> -g <group_id>]  (--mid <mid> | -n <module_name>)
+    merc module run <mid>
+    merc module stop <mid>
+    merc module remove <mid>
+    merc module status [<mid>]
+    merc module find ([--mid <mid> | -c <config_path> | -n <module_name> | -p <module_path> | -P <permission>])
+    merc group add
+    merc group set
+    merc group remove
+    merc group status
 
 Options:
     -c <config_path>                Configuration file.
@@ -26,23 +26,37 @@ Options:
     -p <module_path>                path_to_module.
     -g <group_id>                   Group ID.
 """
-
+import readline
+import logging
+import sys
+from docopt import docopt, DocoptExit
 import zmq
-from docopt import docopt
 import json
-import os   # run mercore with nohup
+import os
 
-#########################################
-##          Global variables           ##
-#########################################
 
-command = ""
+LOG_FILENAME = '/tmp/oms.log'
+logging.basicConfig(filename=LOG_FILENAME,
+                    level=logging.DEBUG)
+
+#used commands for completion
+COMMANDS = [
+    'module',
+    'add',
+    'remove',
+    'help',
+    'blah',
+    'foo',
+    'status',
+    'find',
+    'core',
+    'group',
+    'clear',
+    'exit'
+]
+
 variables = {}
 variable_to_set = ""
-
-#########################################
-##              Functions              ##
-#########################################
 
 
 # function sends message throught TCP to core
@@ -59,7 +73,7 @@ def create_json(arguments):
     m = "{"
     for item in arguments:
         if str(arguments[item]).startswith("[") and str(arguments[item]).endswith("]"):
-            print("hello %s" %(m))
+            #print("hello %s" %(m))
             m = m + "'" + item + "':" + str(arguments[item]) + ","
         else:
             written = 0
@@ -75,7 +89,7 @@ def create_json(arguments):
     m = m + "}"
     return m
 
-# pokud neco zacina promennou, pak vystup ulozi do ni
+
 def process_variables(command):
     global variables
     global variable_to_set
@@ -86,7 +100,7 @@ def process_variables(command):
         var = ' '.join(tokens[:1])
         if len(tokens) == 1:
             if var in variables:
-                print("variable=%s" %(variables[var]))
+                print(variables[var])
             else:
                 print("variable does not exist")
             return "continue"
@@ -100,54 +114,103 @@ def process_variables(command):
     else:
         return command
 
-
-#########################################
-##                Main                 ##
-#########################################
-
-
-while command != "exit" :
-    command = raw_input(">>> ")
-
-    # preprocess command
-    if command == "exit":
-        break
-    elif command == "mercore run":
-        print("initializing program mercore")
-        # run mercore with nohup
-        continue
-    else :
+def process_command(command):
+    command = command.strip()
+    if command == 'exit':
+        return
+    elif command == "":
+        return
+    elif command == 'help':
+        print(__doc__)
+    elif command == 'clear':
+        os.system('cls' if os.name == 'nt' else 'clear')
+    elif command == "core run":
+        print "press ENTER to continue"
+        os.system("nohup ./../mercore.out &");
+    else:
         command = process_variables(command)
         if command == "continue":
-            continue
+            return
+        try:
+            arguments = docopt(__doc__, command.split(), version='mercore 0.0.1')
+            json = create_json(arguments)
+            return json
+        except DocoptExit as e:
+                # The DocoptExit is thrown when the args do not match.
+                # We print a message to the user and the usage block.
 
-        print("processing command [%s] with docopt." %(command))
-        if variable_to_set != "":
-            print("alocated variable [%s]" %(variable_to_set))
-        else:
-            print("no variable alocated")
-            print("alocated variable [%s]" %(variable_to_set))
+                print('Invalid Command!')
+                print(e)
+                return
 
-    #docopt magic
-    command_list = command.split()
-    arguments = docopt(__doc__, command_list, version='mercore 0.0.1')
+        except SystemExit:
+            # The SystemExit exception prints the usage for --help
+            # We do not need to do the print here.
 
-    # if possible, process command in kirk
-    # else send it to the mercore
+            return
 
-    # replace variables with their value
 
-    m = create_json(arguments)
-    print("sending message: %s" %(m))
-    ret_m = send_socket(m, "localhost", 5555)
 
-    #json.loads(ret_m)
-    print(ret_m)
-    if variable_to_set != "":
-        variables[variable_to_set] = ret_m
+class SimpleCompleter(object):
 
-# konec programu
-# vypsat hlasku pokud bezi mercore, ze mercore pobezi dal i po ukonceni tohoto programu,
-# a jestli chce klient priste zobrazit tuto zpravu
+    def __init__(self, options):
+        self.options = sorted(options)
+        return
 
-print("bye bye..")
+
+    def complete(self, text, state):
+        response = None
+        if state == 0:
+            # This is the first time for this text, so build a match list.
+            if text:
+                self.matches = [s
+                                for s in self.options
+                                if s and s.startswith(text)]
+                logging.debug('%s matches: %s', repr(text), self.matches)
+            else:
+                self.matches = self.options[:]
+                logging.debug('(empty input) matches: %s', self.matches)
+
+        # Return the state'th item from the match list,
+        # if we have that many.
+        try:
+            response = self.matches[state]
+        except IndexError:
+            response = None
+        logging.debug('complete(%s, %s) => %s',
+                      repr(text), state, repr(response))
+        return response
+
+def input_loop():
+    line = ''
+    while line != 'exit':
+        line = raw_input('merc >_ ')
+        #print 'Dispatch %s' % line
+        message = process_command(line)
+        if message != None:
+            ret = send_socket(message, "localhost", 5555 )
+            ret_json = json.loads(ret)
+            print "return_message=%s" %ret_json
+            # process return message and save it to the variable
+
+
+# Process args -> help/version
+
+
+
+# Register our completer function
+readline.set_completer(SimpleCompleter(COMMANDS).complete)
+
+# Use the tab key for completion
+readline.parse_and_bind('tab: complete')
+readline.parse_and_bind('set editing-mode vi')
+
+# Prompt the user for text
+input_loop()
+
+
+##
+#   pokud mi vrati {return: X}, pak X ulozim do promenne a vypisu
+#   pokud mi vrati {error: Y}, pak vypisu error message Y
+#   pokud mi vrati neco jineho, ulozim a vypisu
+#

@@ -20,22 +20,24 @@ MODUL_CONT::iterator module_wrapper::find(int module_id) {
 }
 
 
+// in json format
 std::string module_wrapper::get_info() {
   /* Modules */
 
   std::stringstream ss;
 
   ss <<
-  "____________________________________________________________________________________" << '\n' <<
+  "_________________________________________________________________________" << '\n' <<
   "MODULES:" << '\n' <<
   "number_of_modules=" << m_modules.size() << '\n' <<
-  "____________________________________________________________________________________" << '\n';
+  "_________________________________________________________________________" << '\n';
 
   for (auto itr = m_modules.begin(); itr != m_modules.end(); ++itr) {
     ss << itr->second.str() << '\n';
   }
 
-  ss << "____________________________________________________________________________________\n";
+  ss <<
+  "__________________________________________________________________________\n";
   /* Threads */
 
   ss << "THREADS: " << '\n' <<
@@ -46,7 +48,7 @@ std::string module_wrapper::get_info() {
   }
   ss << '\n';
 
-  ss << "____________________________________________________________________________________\n";
+  ss << "___________________________________________________________________________\n";
 
 
   /* Groups */
@@ -57,7 +59,7 @@ std::string module_wrapper::get_info() {
     ss << itr->first << ": " << itr->second.str() << '\n';
   }
 
-  ss << "____________________________________________________________________________________\n\n\n";
+  ss << "__________________________________________________________________________\n\n\n";
 
   return ss.str();
 
@@ -106,7 +108,7 @@ int module_wrapper::add(
   void* module = dlopen(module_path.c_str(), RTLD_LAZY);
   if (!module) {
     std::cerr << "Cannot load module: " << dlerror() << '\n';
-    exit(EXIT_FAILURE); // @TODO: throw exception
+    return (-1); // @TODO: throw exception
   }
 
   // reset errors
@@ -117,14 +119,14 @@ int module_wrapper::add(
   const char* dlsym_error = dlerror();
   if (dlsym_error) {
     std::cerr << "Cannot load symbol create: " << dlsym_error << '\n';
-    exit(EXIT_FAILURE); // @TODO: throw exception
+    return (-2); // @TODO: throw exception
   }
 
   destroy_t* destroy_module = (destroy_t*) dlsym(module, "destroy");
   dlsym_error = dlerror();
   if (dlsym_error) {
     std::cerr << "Cannot load symbol destroy: " << dlsym_error << '\n';
-    exit(1); // @TODO: throw exception
+    return (-3); // @TODO: throw exception
   }
 
   module_struct module_tmp;

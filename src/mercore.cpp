@@ -1,12 +1,9 @@
-#include "cppzmq/zmq.hpp"
-#include <string>
-#include <iostream>
-#include <unistd.h>
-#include <cstdlib>
-#include <sstream>
+/**
+ * issue: pokud nejde nahrat modul, tak musi vratit shellu zpravu,
+ * ze operace selhala
+ */
 
-#include "mongo/client/dbclient.h"
-#include "module_wrapper/module_wrapper.hpp"
+#include "mercore.hpp"
 
 using namespace mongo;
 
@@ -26,7 +23,7 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
 
       // create return message
       std::stringstream ss;
-      ss << "{'return':\"" << module_id << "\"}";
+      ss << "{\"return\":\"" << module_id << "\"}";
       return ss.str();
 
     } else if (b["set"].str() == "True") {
@@ -38,6 +35,7 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
       int module_id = std::atoi(b["<mid>"].str().c_str());
       MODUL_CONT::iterator module = mw.find(module_id);
       mw.remove(module->second);
+
       return "OK";
 
     } else if (b["stop"].str() == "True") {
@@ -71,9 +69,7 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
       return "{'command':\"Stopping mercore.\"}";
 
     } else if (b["exit"].str() == "True") {
-
-      exit(EXIT_SUCCESS);
-      return "{'command':\"Mercore quit. Thank you for using it.\"}";
+      return "{\"return\":\"EXIT\"}";
 
     } else if (b["run"].str() == "True") {
 
@@ -95,7 +91,7 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
  * tento program dostane informace o zpusobu komunikace
  * inicializuje vsechny objekty (modul_wrapper, market_data, orders)
  */
-int main(int argc, char ** argv) {
+int main(/*int argc, char ** argv*/) {
 
   module_wrapper mw;
 
@@ -103,6 +99,9 @@ int main(int argc, char ** argv) {
   zmq::context_t context(1);
   zmq::socket_t socket(context, ZMQ_REP);
   socket.bind("tcp://*:5555");
+
+  //pid_t = getpid(void);
+
 
   while (true) {
 
@@ -127,7 +126,7 @@ int main(int argc, char ** argv) {
     zmq::message_t reply(reply_message.length());
     memcpy ((void *) reply.data(), reply_message.c_str(), reply_message.length());
     socket.send(reply);
-
+    if(reply_message == "{\"return\":\"EXIT\"}") return EXIT_SUCCESS;
   }
 
   return EXIT_SUCCESS;
