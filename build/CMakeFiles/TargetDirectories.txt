@@ -1,1 +1,0 @@
-/home/zahrada/Dropbox/openmerc/MASTER/mercore/build/CMakeFiles/mercore.out.dir
