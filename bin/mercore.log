@@ -1,6 +1,0 @@
-Socket has been received.
-reply_message={"return":{"status": "up and running. feeling good."}}
-Socket has been received.
-reply_message={ "number_of_modules":0 "modules": [{"last": "foo"}]}
-Socket has been received.
-reply_message={"return":"EXIT"}
