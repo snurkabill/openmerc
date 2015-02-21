@@ -1,0 +1,1 @@
+/usr/bin/clang++    -std=c++11 -lzmq -pthread -ldl -lmongoclient -lboost_thread -lboost_system -lboost_regex    CMakeFiles/mercore.out.dir/home/zahrada/Dropbox/openmerc/MASTER/mercore/src/mercore.cpp.o CMakeFiles/mercore.out.dir/home/zahrada/Dropbox/openmerc/MASTER/mercore/src/module_wrapper/module_wrapper.cpp.o  -o mercore.out -rdynamic 

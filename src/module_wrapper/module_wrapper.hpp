@@ -10,7 +10,7 @@
 #include <sstream>
 #include <map>
 #include "module_base.hpp"
-
+#include "mongo/client/dbclient.h"
 
 // dev
 #include <unistd.h>
@@ -86,6 +86,24 @@ typedef struct module_struct {
 
     return ss.str();
   }
+
+  // toBSONObj
+
+  mongo::BSONObj toBSON() {
+    mongo::BSONObjBuilder b;
+    b.append("id", id);
+    b.append("name", name);
+    b.append("init", initialized);
+    b.append("thread_id", thread_index);
+    b.append("config", config_path);
+    b.append("module", module_path);
+    b.append("perm", permission);
+    b.append("group_id", group_id);
+
+    return b.obj();
+  }
+
+
 
 } modul_struct;
 

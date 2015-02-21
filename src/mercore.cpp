@@ -1,8 +1,3 @@
-/**
- * issue: pokud nejde nahrat modul, tak musi vratit shellu zpravu,
- * ze operace selhala
- */
-
 #include "mercore.hpp"
 
 using namespace mongo;
@@ -28,7 +23,12 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
 
     } else if (b["set"].str() == "True") {
 
-      return "{'return':\"setting module is not defined yet\"}";
+      // if running >> stop
+      // change configuration
+      // init
+      // run
+
+      return "{\"return\":\"0\"}";
 
     } else if (b["remove"].str() == "True") {
 
@@ -36,7 +36,7 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
       MODUL_CONT::iterator module = mw.find(module_id);
       mw.remove(module->second);
 
-      return "OK";
+      return "{\"return\":\"0\"}";  // if everything is ok
 
     } else if (b["stop"].str() == "True") {
 
@@ -44,7 +44,7 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
       MODUL_CONT::iterator module = mw.find(module_id);
       mw.stop(module->second);
 
-      return "OK";
+      return "{\"return\":\"0\"}";
 
     } else if (b["run"].str() == "True") {
 
@@ -52,6 +52,7 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
       MODUL_CONT::iterator module = mw.find(module_id);
       mw.run(module->second);
 
+      return "{\"return\": \"method called\"}";
 
     } else if (b["status"].str() == "True") {
 
@@ -59,32 +60,28 @@ std::string process_command(BSONObj b, module_wrapper & mw) {
 
     } else if (b["find"].str() == "True") {
 
-      return "{'return': \"The method find is not implemented yet.\"}";
+      return "{\"return\": \"0\"}";
     }
 
   } else if (b["core"].str() == "True") {
 
-    if (b["stop"].str() == "True") {
-
-      return "{'command':\"Stopping mercore.\"}";
-
-    } else if (b["exit"].str() == "True") {
+    if (b["exit"].str() == "True") {
       return "{\"return\":\"EXIT\"}";
 
     } else if (b["run"].str() == "True") {
 
-      return "{'command':\"Mercore is up and running!\"}";
+      return "{\"return\":\"0\"}";
 
     } else if (b["status"].str() == "True") {
 
-      return "{'command':\"Mercore update status!\"}";
+      return "{\"return\":{\"status\": \"up and running. feeling good.\"}}";
     }
 
   }
 
   // pokud se dostal az se, pak command neni validni nebo je chyba v kodu...
 
-  return "{'command':\"Unknown command.\"}";
+  return "{\"return\":\"Unknown command.\"}";
 }
 
 /**

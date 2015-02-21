@@ -20,50 +20,71 @@ MODUL_CONT::iterator module_wrapper::find(int module_id) {
 }
 
 
-// in json format
 std::string module_wrapper::get_info() {
-  /* Modules */
+
+  /* make a bit more complex object with some nesting
+   * { x : 'asdf', y : true, subobj : { z : 3, q : 4 } }
+   */
+  // BSONObj y = BSON( "x" << "asdf" << "y" << true << "subobj" << BSON( "z" << 3 << "q" << 4 ) );
+
+  /**
+   * {number_of_modules: ..., modules: [{module info}, ...] ,number_of_threads: ..., threads: [{threads info}, ...] }
+   */
+
+  //BSONObj b = BSON("number_of_modules" << m_modules.size() << "modules:" <<);
 
   std::stringstream ss;
-
-  ss <<
-  "_________________________________________________________________________" << '\n' <<
-  "MODULES:" << '\n' <<
-  "number_of_modules=" << m_modules.size() << '\n' <<
-  "_________________________________________________________________________" << '\n';
-
+  ss << "{ \"number_of_modules\":" << m_modules.size() << " \"modules\": [";
   for (auto itr = m_modules.begin(); itr != m_modules.end(); ++itr) {
-    ss << itr->second.str() << '\n';
+    ss << itr->second.toBSON().jsonString() << ',';
   }
-
-  ss <<
-  "__________________________________________________________________________\n";
-  /* Threads */
-
-  ss << "THREADS: " << '\n' <<
-  "number_of_threads=" << m_threads.size() << '\n' <<
-  "active thread_id: ";
-  for (auto itr = m_threads.begin(); itr != m_threads.end(); ++itr) {
-    ss << itr->first << ", ";
-  }
-  ss << '\n';
-
-  ss << "___________________________________________________________________________\n";
-
-
-  /* Groups */
-
-  ss << "GROUPS: " << '\n' <<
-  "number_of_groups=" << m_threads.size() << '\n';
-  for (auto itr = m_groups.begin(); itr != m_groups.end(); ++itr) {
-    ss << itr->first << ": " << itr->second.str() << '\n';
-  }
-
-  ss << "__________________________________________________________________________\n\n\n";
-
+  ss << "{\"last\": \"foo\"}]}";
   return ss.str();
-
 }
+
+// in json format
+// std::string module_wrapper::get_info() {
+//
+//   std::stringstream ss;
+//
+//   ss <<
+//   "_________________________________________________________________________" << '\n' <<
+//   "MODULES:" << '\n' <<
+//   "number_of_modules=" << m_modules.size() << '\n' <<
+//   "_________________________________________________________________________" << '\n';
+//
+//   for (auto itr = m_modules.begin(); itr != m_modules.end(); ++itr) {
+//     ss << itr->second.str() << '\n';
+//   }
+//
+//   ss <<
+//   "__________________________________________________________________________\n";
+//   /* Threads */
+//
+//   ss << "THREADS: " << '\n' <<
+//   "number_of_threads=" << m_threads.size() << '\n' <<
+//   "active thread_id: ";
+//   for (auto itr = m_threads.begin(); itr != m_threads.end(); ++itr) {
+//     ss << itr->first << ", ";
+//   }
+//   ss << '\n';
+//
+//   ss << "___________________________________________________________________________\n";
+//
+//
+//   /* Groups */
+//
+//   ss << "GROUPS: " << '\n' <<
+//   "number_of_groups=" << m_threads.size() << '\n';
+//   for (auto itr = m_groups.begin(); itr != m_groups.end(); ++itr) {
+//     ss << itr->first << ": " << itr->second.str() << '\n';
+//   }
+//
+//   ss << "__________________________________________________________________________\n\n\n";
+//
+//   return ss.str();
+//
+// }
 
 /**
  * Metoda vytiskne info o aktualnich modulech
@@ -141,7 +162,7 @@ int module_wrapper::add(
   module_tmp.group_id     = group_id;
 
 
-  m_modules.insert( std::pair<int, module_struct>(group_id, module_tmp));
+  m_modules.insert( std::pair<int, module_struct>(module_tmp.id, module_tmp));
 
   return module_tmp.id;
 }
