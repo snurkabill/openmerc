@@ -13,6 +13,5 @@ notifications:
 compiler: clang
 
 script:
-  cd build
-  cmake .
+  cmake build/
   make
