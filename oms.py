@@ -113,7 +113,7 @@ def process_command(command):
     elif command == 'clear':
         os.system('cls' if os.name == 'nt' else 'clear')
     elif command == "core run":
-        ret = os.system("nohup /usr/local/bin/mercore.out > bin/mercore.log 2>&1&");
+        ret = os.system("nohup /usr/local/bin/mercore.out > ~/.mercore.log 2>&1&");
         if ret == 0:
             print "core is up and running!"
         else:

@@ -110,9 +110,10 @@ typedef struct module_struct {
 // unclear.
 typedef struct group_struct {
 
+  int                   id;
   std::string           name;
-  std::vector<int>      subscribers; // id modulu, kam se preposilaji prikazy.
-
+  std::vector<int>      market_data; // id modulu con
+  std::vector<int>      orders; // id modulu comp
 
   std::string str() const{
     std::stringstream ss;
