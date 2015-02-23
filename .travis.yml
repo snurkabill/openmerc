@@ -1,6 +1,8 @@
 language: cpp
 
 notifications:
+  slack:
+    'openmerc:hBVTzYE0ZqxSSDPazeSDrpzx#mercore'
   webhooks:
     urls:
       https://webhooks.gitter.im/e/0e8fdd1d54698a3f900d
