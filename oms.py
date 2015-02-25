@@ -33,6 +33,7 @@ from docopt import docopt, DocoptExit
 import zmq
 import json
 import os
+import subprocess
 
 
 LOG_FILENAME = '/tmp/oms.log'
@@ -46,6 +47,11 @@ COMMANDS = [ 'module', 'add', 'remove', 'help', 'blah', 'foo',
 variables = {}
 variable_to_set = ""
 
+def check_if_mercore_is_running():
+    process = subprocess.Popen("ps cax | grep mercore.out",shell=True,stdout=subprocess.PIPE)
+    stdout_list = process.communicate()[0].split('\n')
+    print stdout_list
+    print len(stdout_list)
 
 # function sends message throught TCP to core
 def send_socket(zprava, ip, port):
@@ -110,6 +116,8 @@ def process_command(command):
         return
     elif command == 'help':
         print(__doc__)
+    elif command == "core status":
+        check_if_mercore_is_running()
     elif command == 'clear':
         os.system('cls' if os.name == 'nt' else 'clear')
     elif command == "core run":
@@ -118,7 +126,7 @@ def process_command(command):
             print "core is up and running!"
         else:
             print "uups. some error occurred"
-    else:
+    else: # check if mercore is listening
         command = process_variables(command)
         if command == "continue":
             return
