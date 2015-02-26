@@ -13,6 +13,7 @@ notifications:
 compiler: clang
 
 script:
+  mkdir build
   cd build
   cmake ../
   make
