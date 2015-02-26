@@ -93,6 +93,7 @@ typedef struct module_struct {
     mongo::BSONObjBuilder b;
     b.append("id", id);
     b.append("name", name);
+    b.append("active", active);
     b.append("init", initialized);
     b.append("thread_id", thread_index);
     b.append("config", config_path);
@@ -115,16 +116,16 @@ typedef struct group_struct {
   std::vector<int>      market_data; // id modulu con
   std::vector<int>      orders; // id modulu comp
 
-  std::string str() const{
-    std::stringstream ss;
-    ss << "{'name':\"" << name << "\", 'sibscribers': [";
-    for (auto itr = subscribers.begin(); itr != subscribers.end(); ++itr) {
-      ss << "'" << *itr << "'";
-      if(itr != subscribers.end()-1) ss << ", ";
-    }
-    ss << "]}";
-    return ss.str();
-  }
+  // std::string str() const {
+  //   std::stringstream ss;
+  //   ss << "{'name':\"" << name << "\", 'sibscribers': [";
+  //   for (auto itr = subscribers.begin(); itr != subscribers.end(); ++itr) {
+  //     ss << "'" << *itr << "'";
+  //     if(itr != subscribers.end()-1) ss << ", ";
+  //   }
+  //   ss << "]}";
+  //   return ss.str();
+  // }
 
 } group_struct;
 

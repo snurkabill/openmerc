@@ -42,50 +42,6 @@ std::string module_wrapper::get_info() {
   return ss.str();
 }
 
-// in json format
-// std::string module_wrapper::get_info() {
-//
-//   std::stringstream ss;
-//
-//   ss <<
-//   "_________________________________________________________________________" << '\n' <<
-//   "MODULES:" << '\n' <<
-//   "number_of_modules=" << m_modules.size() << '\n' <<
-//   "_________________________________________________________________________" << '\n';
-//
-//   for (auto itr = m_modules.begin(); itr != m_modules.end(); ++itr) {
-//     ss << itr->second.str() << '\n';
-//   }
-//
-//   ss <<
-//   "__________________________________________________________________________\n";
-//   /* Threads */
-//
-//   ss << "THREADS: " << '\n' <<
-//   "number_of_threads=" << m_threads.size() << '\n' <<
-//   "active thread_id: ";
-//   for (auto itr = m_threads.begin(); itr != m_threads.end(); ++itr) {
-//     ss << itr->first << ", ";
-//   }
-//   ss << '\n';
-//
-//   ss << "___________________________________________________________________________\n";
-//
-//
-//   /* Groups */
-//
-//   ss << "GROUPS: " << '\n' <<
-//   "number_of_groups=" << m_threads.size() << '\n';
-//   for (auto itr = m_groups.begin(); itr != m_groups.end(); ++itr) {
-//     ss << itr->first << ": " << itr->second.str() << '\n';
-//   }
-//
-//   ss << "__________________________________________________________________________\n\n\n";
-//
-//   return ss.str();
-//
-// }
-
 /**
  * Metoda vytiskne info o aktualnich modulech
  * @type {}
