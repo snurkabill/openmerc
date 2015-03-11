@@ -1,4 +1,4 @@
-# Mercore
+# Openmerc
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/openMerc/openmerc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build Status](https://travis-ci.org/openMerc/openmerc.svg?branch=master)](https://travis-ci.org/openMerc/openmerc)
@@ -9,7 +9,7 @@ Mercore is brought to you by Openmerc community. Openmerc helps you to get done 
 
 ## Issues and Fixes
 
-At the moment, we are not experiencing any bugs and issues. Help us to dig them out. 
+At the moment, we are not experiencing any bugs and issues. Help us to hunt them out. 
 
 ## Installation
 
@@ -34,7 +34,7 @@ To run mercore properly, you will need other essential structures:
 * [ØMQ Libraries](http://github.com/zeromq/libzmq) v. 4.0.5
 * [ØMQ C++ Driver](http://github.com/zeromq/cppzmq) v. 4.1 
 * [docopt](http://github.com/docopt/docopt) v. 0.6.1 
-* g++ v. 4.8 *or* clang++ v. 3.7
+* clang++ v. 3.7
 * [MongoDB](http://github.com/mongodb/mongo) v. 2.4.12 
 * [Mongo C++ Driver](http://github.com/mongodb/mongo-cxx-driver) v. 1.0.0 
 
@@ -70,10 +70,10 @@ General documentation will be published later.
 Mercore runs under the MIT License with respect to licences of included code. For more information on MIT License, see [opensource.org](http://opensource.org/licenses/MIT) or [LICENSE](https://github.com/mrzahrada/mercore/blob/master/LICENSE) file.
 Namely, following parts differ from the source code license:
 
-* Boost Libraries - Boost Software License; Version 1.0, August 17th, 2003; [more here](http://www.boost.org/)
-* ØMQ driver - MIT License; [more here](http://github.com/zeromq/cppzmq)
-* docopt - MIT License; [more here](http://github.com/docopt/docopt)
-* MongoDB C++ Driver - Apache License, version 2.0; [more here](http://github.com/mongodb/mongo-cxx-driver)
+* [Boost Libraries - Boost Software License](http://www.boost.org/); Version 1.0, August 17th, 2003
+* [ØMQ driver](http://github.com/zeromq/cppzmq) - MIT License 
+* [docopt](http://github.com/docopt/docopt) - MIT License
+* [MongoDB C++ Driver](http://github.com/mongodb/mongo-cxx-driver) - Apache License, version 2.0
 
 ## Manifesto
 
