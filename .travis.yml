@@ -5,7 +5,7 @@ notifications:
     'openmerc:hBVTzYE0ZqxSSDPazeSDrpzx#mercore'
   webhooks:
     urls:
-      https://webhooks.gitter.im/e/0e8fdd1d54698a3f900d
+      https://webhooks.gitter.im/e/e82d96d436bee489ca1c
     on_success: always  # options: [always|never|change] default: always
     on_failure: always  # options: [always|never|change] default: always
     on_start: false     # default: false
