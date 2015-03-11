@@ -22,17 +22,6 @@ MODUL_CONT::iterator module_wrapper::find(int module_id) {
 
 std::string module_wrapper::get_info() {
 
-  /* make a bit more complex object with some nesting
-   * { x : 'asdf', y : true, subobj : { z : 3, q : 4 } }
-   */
-  // BSONObj y = BSON( "x" << "asdf" << "y" << true << "subobj" << BSON( "z" << 3 << "q" << 4 ) );
-
-  /**
-   * {number_of_modules: ..., modules: [{module info}, ...] ,number_of_threads: ..., threads: [{threads info}, ...] }
-   */
-
-  //BSONObj b = BSON("number_of_modules" << m_modules.size() << "modules:" <<);
-
   std::stringstream ss;
   ss << "{ \"number_of_modules\":" << m_modules.size() << " \"modules\": [";
   for (auto itr = m_modules.begin(); itr != m_modules.end(); ++itr) {
