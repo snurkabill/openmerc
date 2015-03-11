@@ -1,0 +1,6 @@
+[ ] move module_struct into separate file
+[ ] BUG FIX: removing modules
+[ ] get_info method from module_wrapper
+  - fix output (BSON)
+[ ] openmerc - oms communication: JSON -> BSON
+[ ] connections between modules
