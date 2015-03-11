@@ -1,7 +1,7 @@
 # Mercore
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/openMerc/openmerc?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Build Status](https://travis-ci.org/mrzahrada/mercore.svg?branch=master)](https://travis-ci.org/mrzahrada/mercore)
+[![Build Status](https://travis-ci.org/openMerc/openmerc.svg?branch=master)](https://travis-ci.org/openMerc/openmerc)
 
 ## About
 
